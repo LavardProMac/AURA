@@ -1,1 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA — Minimalist Fashion Studio</title>
+    <!-- Minimalist AURA Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='16' fill='%23111111'/><text x='50%' y='68%' font-family='Georgia, serif' font-size='19' font-weight='bold' fill='%23ffffff' text-anchor='middle'>A</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS File -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
+    <!-- 1. Announcement Bar -->
+    <div class="announcement-bar">
+        <p>Free nationwide shipping on orders over $150 | Use code: <strong>AURA2026</strong></p>
+    </div>
+
+    <!-- 2. Header & Navigation -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+            </button>
+            
+            <a href="#" class="brand-logo">AURA.</a>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="#hero" class="nav-item active">Home</a>
+                <a href="#products" class="nav-item">Collections</a>
+                <a href="#editorial" class="nav-item">Lookbook</a>
+                <a href="#about" class="nav-item">About Us</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="icon-btn search-btn" aria-label="Search">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </button>
+                <button class="icon-btn cart-btn" id="cartBtn" aria-label="Shopping Cart">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <div class="search-header">
+                <input type="text" id="searchInput" placeholder="Search products, collections..." autocomplete="off">
+                <button class="close-search-btn" id="closeSearch" aria-label="Close Search">&times;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Cart Side Drawer -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <aside class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-header">
+            <h3>Your Cart (<span id="cartTotalItems">0</span>)</h3>
+            <button class="close-cart-btn" id="closeCart">&times;</button>
+        </div>
+        <div class="cart-drawer-body" id="cartItemsList">
+            <p class="empty-cart-msg">Your shopping cart is empty.</p>
+        </div>
+        <div class="cart-drawer-footer">
+            <div class="subtotal-row">
+                <span>Subtotal:</span>
+                <strong id="cartSubtotal">$0.00</strong>
+            </div>
+            <button class="btn btn-dark btn-block" id="checkoutBtn">Checkout Now</button>
+        </div>
+    </aside>
+
+    <!-- 4. Hero Section -->
+    <section class="hero scroll-block" id="hero">
+        <div class="hero-slider" id="heroSlider">
+            <!-- Slide 1 -->
+            <div class="hero-slide active">
+                <div class="hero-bg dark-overlay">
+                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop" alt="Autumn Collection">
+                </div>
+                <div class="hero-content content-center">
+                    <span class="hero-tag">AUTUMN / WINTER 2026</span>
+                    <h1 class="hero-title hero-title-bold">TIMELESS MINIMALIST</h1>
+                    <p class="hero-desc">Redefining modern elegance through understated silhouettes, organic textiles, and refined craftsmanship.</p>
+                    <a href="#products" class="btn btn-primary">Discover Collection</a>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="hero-slide">
+                <div class="hero-bg dark-overlay">
+                    <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1600&auto=format&fit=crop" alt="Editorial Lookbook">
+                </div>
+                <div class="hero-content content-center">
+                    <span class="hero-tag">EDITORIAL LOOKBOOK</span>
+                    <h1 class="hero-title hero-title-bold">POETRY IN MOTION</h1>
+                    <p class="hero-desc">Embrace fluid tailoring designed for contemporary living and effortless sophistication.</p>
+                    <a href="#editorial" class="btn btn-primary">Explore Lookbook</a>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="hero-slide">
+                <div class="hero-bg dark-overlay">
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1600&auto=format&fit=crop" alt="Luxury Collection">
+                </div>
+                <div class="hero-content content-center">
+                    <span class="hero-tag">LIMITED EDITION</span>
+                    <h1 class="hero-title hero-title-bold">EFFORTLESS LUXURY</h1>
+                    <p class="hero-desc">Curated essentials crafted to elevate your daily wardrobe aesthetic seamlessly.</p>
+                    <a href="#products" class="btn btn-primary">Shop Exclusives</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicators -->
+        <div class="hero-indicators" id="heroIndicators">
+            <span class="indicator active" data-slide="0"></span>
+            <span class="indicator" data-slide="1"></span>
+            <span class="indicator" data-slide="2"></span>
+        </div>
+    </section>
+
+    <!-- 5. Products Section -->
+    <section class="products-section scroll-block" id="products">
+        <div class="container">
+            <div class="section-title-wrapper text-center">
+                <span class="sub-title">NEW ARRIVALS</span>
+                <h2 class="section-title">Featured Collection</h2>
+                <p class="page-indicator-text">Page <span id="currentPageNum">1</span> of 2</p>
+            </div>
+
+            <!-- Slider Wrapper với Mũi Tên 2 bên -->
+            <div class="products-row-wrapper">
+                <button class="vertical-arrow-btn prev-btn" id="prevBatchBtn" aria-label="Previous 4 Products">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+
+                <!-- Cấu trúc Slider Window & Track -->
+                <div class="products-slider-window">
+                    <div class="products-slider-track" id="productsTrack">
+                        
+                        <!-- TRANG 1 (4 MÓN) -->
+                        <div class="products-page">
+                            <div class="product-card" data-id="1" data-name="Wool Trench Coat" data-price="245" data-img="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=800&auto=format&fit=crop">
+                                <div class="product-image-wrapper">
+                                    <span class="badge badge-new">New</span>
+                                    <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=800&auto=format&fit=crop" alt="Wool Trench Coat" class="product-img">
+                                    <div class="cart-controls">
+                                        <button class="quick-add-btn">Add to Cart</button>
+                                        <div class="quantity-control hidden">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <span class="qty-count">1</span>
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-category">Outerwear</span>
+                                    <h3 class="product-title">Wool Trench Coat</h3>
+                                    <p class="product-price">$245.00</p>
+                                </div>
+                            </div>
+
+                            <div class="product-card" data-id="2" data-name="Silk Draped Dress" data-price="189" data-img="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop">
+                                <div class="product-image-wrapper">
+                                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop" alt="Silk Draped Dress" class="product-img">
+                                    <div class="cart-controls">
+                                        <button class="quick-add-btn">Add to Cart</button>
+                                        <div class="quantity-control hidden">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <span class="qty-count">1</span>
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-category">Dresses</span>
+                                    <h3 class="product-title">Silk Draped Dress</h3>
+                                    <p class="product-price">$189.00</p>
+                                </div>
+                            </div>
+
+                            <div class="product-card" data-id="3" data-name="Structured Minimal Blazer" data-price="165" data-img="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop">
+                                <div class="product-image-wrapper">
+                                    <span class="badge badge-hot">Best Seller</span>
+                                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop" alt="Structured Blazer" class="product-img">
+                                    <div class="cart-controls">
+                                        <button class="quick-add-btn">Add to Cart</button>
+                                        <div class="quantity-control hidden">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <span class="qty-count">1</span>
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-category">Outerwear</span>
+                                    <h3 class="product-title">Structured Minimal Blazer</h3>
+                                    <p class="product-price">$165.00</p>
+                                </div>
+                            </div>
+
+                            <div class="product-card" data-id="4" data-name="Leather Tote Bag" data-price="320" data-img="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800&auto=format&fit=crop">
+                                <div class="product-image-wrapper">
+                                    <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800&auto=format&fit=crop" alt="Leather Tote Bag" class="product-img">
+                                    <div class="cart-controls">
+                                        <button class="quick-add-btn">Add to Cart</button>
+                                        <div class="quantity-control hidden">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <span class="qty-count">1</span>
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-category">Accessories</span>
+                                    <h3 class="product-title">Leather Tote Bag</h3>
+                                    <p class="product-price">$320.00</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TRANG 2 (4 MÓN) -->
+                        <div class="products-page">
+                            <div class="product-card" data-id="5" data-name="Cashmere Oversized Knit" data-price="210" data-img="https://images.unsplash.com/photo-1576995853123-5a10305d93c0?q=80&w=800&auto=format&fit=crop">
+                                <div class="product-image-wrapper">
+                                    <span class="badge badge-new">New</span>
+                                    <img src="https://images.unsplash.com/photo-1576995853123-5a10305d93c0?q=80&w=800&auto=format&fit=crop" alt="Cashmere Knit" class="product-img">
+                                    <div class="cart-controls">
+                                        <button class="quick-add-btn">Add to Cart</button>
+                                        <div class="quantity-control hidden">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <span class="qty-count">1</span>
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-category">Knitwear</span>
+                                    <h3 class="product-title">Cashmere Oversized Knit</h3>
+                                    <p class="product-price">$210.00</p>
+                                </div>
+                            </div>
+
+                            <div class="product-card" data-id="6" data-name="Pleated Tailored Trousers" data-price="140" data-img="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop">
+                                <div class="product-image-wrapper">
+                                    <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop" alt="Tailored Trousers" class="product-img">
+                                    <div class="cart-controls">
+                                        <button class="quick-add-btn">Add to Cart</button>
+                                        <div class="quantity-control hidden">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <span class="qty-count">1</span>
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-category">Trousers</span>
+                                    <h3 class="product-title">Pleated Tailored Trousers</h3>
+                                    <p class="product-price">$140.00</p>
+                                </div>
+                            </div>
+
+                            <div class="product-card" data-id="7" data-name="Square-Toe Leather Boots" data-price="290" data-img="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=800&auto=format&fit=crop">
+                                <div class="product-image-wrapper">
+                                    <span class="badge badge-hot">Best Seller</span>
+                                    <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=800&auto=format&fit=crop" alt="Leather Boots" class="product-img">
+                                    <div class="cart-controls">
+                                        <button class="quick-add-btn">Add to Cart</button>
+                                        <div class="quantity-control hidden">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <span class="qty-count">1</span>
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-category">Footwear</span>
+                                    <h3 class="product-title">Square-Toe Leather Boots</h3>
+                                    <p class="product-price">$290.00</p>
+                                </div>
+                            </div>
+
+                            <div class="product-card" data-id="8" data-name="Heavyweight Wool Scarf" data-price="85" data-img="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?q=80&w=800&auto=format&fit=crop">
+                                <div class="product-image-wrapper">
+                                    <img src="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?q=80&w=800&auto=format&fit=crop" alt="Wool Scarf" class="product-img">
+                                    <div class="cart-controls">
+                                        <button class="quick-add-btn">Add to Cart</button>
+                                        <div class="quantity-control hidden">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <span class="qty-count">1</span>
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-category">Accessories</span>
+                                    <h3 class="product-title">Heavyweight Wool Scarf</h3>
+                                    <p class="product-price">$85.00</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="vertical-arrow-btn next-btn" id="nextBatchBtn" aria-label="Next 4 Products">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Editorial Section -->
+    <section class="editorial-section scroll-block" id="editorial">
+        <div class="editorial-container">
+            <div class="editorial-image">
+                <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1200&auto=format&fit=crop" alt="AURA Editorial Lookbook">
+            </div>
+            <div class="editorial-content">
+                <span class="sub-heading">DESIGN PHILOSOPHY</span>
+                <h2 class="editorial-title">Elegance in Simplicity</h2>
+                <p class="editorial-text">
+                    Sustainable fashion begins with refined natural fabrics and enduring silhouettes. Each AURA piece bridges contemporary art and everyday luxury seamlessly.
+                </p>
+                <a href="#" class="editorial-link">Explore Full Lookbook &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Newsletter Section -->
+    <section class="newsletter-section scroll-block">
+        <div class="container text-center">
+            <h2 class="newsletter-title">Subscribe to Our Newsletter</h2>
+            <p class="newsletter-desc">Receive 10% off your first purchase and stay updated on limited collection drops.</p>
+            <form class="newsletter-form" id="newsletterForm">
+                <input type="email" placeholder="Enter your email address..." required>
+                <button type="submit" class="btn btn-dark">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- 8. Footer Section (scroll-block removed) -->
+    <footer class="footer" id="about">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <a href="#" class="brand-logo light">AURA.</a>
+                <p class="footer-about">A minimalist fashion studio dedicated to understated luxury and timeless modern apparel.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Coats & Blazers</a></li>
+                    <li><a href="#">Dresses & Skirts</a></li>
+                    <li><a href="#">Leather Goods</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">Returns & Exchanges</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">Pinterest</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2026 AURA Studio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">Added to cart successfully!</div>
+
+    <!-- Script File -->
+    <script src="script.js"></script>
+</body>
+</html>
