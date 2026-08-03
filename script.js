@@ -336,11 +336,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchOverlay = document.getElementById('searchOverlay');
     const closeSearch = document.getElementById('closeSearch');
     const searchInput = document.getElementById('searchInput');
+    const searchModal = document.querySelector('.search-modal');
+
+    // 1. Dynamically create a results container so index.html stays completely untouched
+    const searchResults = document.createElement('div');
+    searchResults.style.marginTop = '24px';
+    searchResults.style.maxHeight = '60vh';
+    searchResults.style.overflowY = 'auto';
+    searchResults.style.display = 'none'; 
+    
+    if (searchModal) {
+        searchModal.appendChild(searchResults);
+    }
 
     function openSearchOverlay() {
         if (!searchOverlay) return;
         searchOverlay.classList.add('active');
-        if (searchInput) setTimeout(() => searchInput.focus(), 100);
+        if (searchInput) {
+            searchInput.value = ''; // Reset input on open
+            searchResults.innerHTML = ''; // Clear old results
+            searchResults.style.display = 'none';
+            setTimeout(() => searchInput.focus(), 100);
+        }
     }
 
     function closeSearchOverlay() {
@@ -368,11 +385,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            closeCartDrawer();
+            closeCartDrawer(); 
             closeSearchOverlay();
         }
     });
 
+    // 2. Real-time Prefix Search Logic
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            searchResults.innerHTML = ''; // Clear results on every keystroke
+
+            if (searchTerm === '') {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            searchResults.style.display = 'block';
+            const allProducts = document.querySelectorAll('.product-card');
+            let hasResults = false;
+
+            allProducts.forEach(card => {
+                const productName = card.getAttribute('data-name').toLowerCase();
+                
+                // Show product ONLY if the name starts with the exact typed prefix
+                if (productName.startsWith(searchTerm)) {
+                    hasResults = true;
+                    
+                    const imgSrc = card.getAttribute('data-img');
+                    const name = card.getAttribute('data-name');
+                    const price = parseFloat(card.getAttribute('data-price')).toFixed(2);
+
+                    // Create a minimalist result row that matches your site's aesthetic
+                    const resultItem = document.createElement('div');
+                    resultItem.style.display = 'flex';
+                    resultItem.style.alignItems = 'center';
+                    resultItem.style.gap = '16px';
+                    resultItem.style.padding = '12px 0';
+                    resultItem.style.borderBottom = '1px solid #f0f0f0';
+
+                    resultItem.innerHTML = `
+                        <img src="${imgSrc}" alt="${name}" style="width: 50px; height: 65px; object-fit: cover; border-radius: 2px;">
+                        <div>
+                            <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif; color: #111;">${name}</h4>
+                            <p style="font-size: 0.9rem; color: #555;">$${price}</p>
+                        </div>
+                    `;
+                    searchResults.appendChild(resultItem);
+                }
+            });
+
+            if (!hasResults) {
+                searchResults.innerHTML = '<p style="color: #777; font-size: 0.9rem; text-align: center; padding: 20px 0;">No matching products found.</p>';
+            }
+        });
+    }
 
     // ==========================================================================
     // 6. SCROLLSPY & NAVBAR CLICK HANDLER
