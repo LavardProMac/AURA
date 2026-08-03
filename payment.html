@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout — AURA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .checkout-page { padding: 60px 20px; max-width: 1000px; margin: 0 auto; background-color: #fdfbf7; min-height: 80vh; }
+        .checkout-header { text-align: center; margin-bottom: 40px; }
+        .checkout-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; margin-bottom: 10px; }
+        #greeting-message { font-size: 1.1rem; color: #555; font-weight: 500; display: none; }
+        
+        .checkout-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 50px; }
+        .checkout-section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; margin-bottom: 24px; border-bottom: 1px solid #e5e5e5; padding-bottom: 10px; }
+        
+        .payment-method-wrapper { border: 1px solid #e5e5e5; border-radius: 4px; margin-bottom: 20px; overflow: hidden; background: #fff; transition: 0.3s; }
+        .payment-method-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; background: #fafafa; cursor: pointer; font-weight: 600; }
+        .payment-method-header input[type="radio"] { transform: scale(1.2); accent-color: #111; cursor: pointer; }
+        .payment-method-body { padding: 20px; border-top: 1px solid #e5e5e5; display: none; background: #fff; }
+        .payment-method-wrapper.active .payment-method-body { display: block; }
+        .payment-method-wrapper.active { border-color: #111; }
+
+        .input-row { display: flex; gap: 16px; margin-bottom: 16px; }
+        .checkout-input { width: 100%; padding: 12px 16px; border: 1px solid #e5e5e5; font-family: inherit; outline: none; margin-bottom: 16px; box-sizing: border-box; }
+        .checkout-input:focus { border-color: #111; }
+
+        .order-summary { background: #fff; padding: 30px; border-radius: 4px; border: 1px solid #e5e5e5; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; color: #555; }
+        .summary-total { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 2px solid #e5e5e5; font-size: 1.2rem; font-weight: 700; color: #111; }
+
+        .btn-checkout { width: 100%; padding: 16px; font-size: 1rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; border: none; transition: 0.3s; margin-top: 20px; }
+        .btn-black { background: #111; color: #fff; }
+        .btn-black:hover { background: #333; }
+        .btn-paypal { background: #ffc439; color: #111; display: none; }
+        .btn-paypal:hover { background: #f4b619; }
+
+        @media (max-width: 768px) { .checkout-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header class="navbar" style="padding: 20px; text-align: center; background: #fff; border-bottom: 1px solid #e5e5e5;">
+        <a href="index.html" class="brand-logo" style="font-size: 24px; font-weight: bold; text-decoration: none; color: #111; font-family: 'Cormorant Garamond', serif;">AURA.</a>
+    </header>
+
+    <div class="checkout-page">
+        <div class="checkout-header">
+            <h1>Secure Checkout</h1>
+            <p id="greeting-message"></p>
+        </div>
+
+        <div class="checkout-grid">
+            <form class="checkout-forms" onsubmit="processPayment(event)">
+                <h2 class="checkout-section-title">Payment Method</h2>
+                
+                <div class="payment-method-wrapper active" id="wrapper-card" onclick="selectMethod('card')">
+                    <label class="payment-method-header">
+                        <input type="radio" name="paymentType" id="radio-card" value="card" checked onchange="selectMethod('card')">
+                        Credit / Debit Card
+                    </label>
+                    <div class="payment-method-body">
+                        <input type="text" class="checkout-input" placeholder="Card Number" required>
+                        <input type="text" class="checkout-input" placeholder="Name on Card" required>
+                        <div class="input-row">
+                            <input type="text" class="checkout-input" placeholder="MM/YY" style="margin-bottom: 0;" required>
+                            <input type="text" class="checkout-input" placeholder="CVC" style="margin-bottom: 0;" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-method-wrapper" id="wrapper-paypal" onclick="selectMethod('paypal')">
+                    <label class="payment-method-header">
+                        <input type="radio" name="paymentType" id="radio-paypal" value="paypal" onchange="selectMethod('paypal')">
+                        PayPal
+                    </label>
+                    <div class="payment-method-body" style="text-align: center;">
+                        <svg viewBox="0 0 124 33" style="height: 30px; margin-bottom: 10px;"><path fill="#253B80" d="M46.211 6.749h-6.839a.95.95 0 0 0-.939.802l-2.766 17.537a.57.57 0 0 0 .564.658h3.265a.95.95 0 0 0 .939-.803l.746-4.73a.95.95 0 0 1 .938-.803h2.165c4.505 0 7.105-2.18 7.784-6.5.306-1.89.013-3.375-.872-4.415-1.139-1.336-3.197-1.746-5.985-1.746zM47.9 14.99c-.374 2.454-2.249 2.454-4.062 2.454h-1.032l.724-4.583a.57.57 0 0 1 .563-.481h.473c1.235 0 2.4 0 3.002.704.359.42.469 1.044.332 1.906zM66.654 13.075h-3.275a.57.57 0 0 0-.563.481l-.146.916-.229-.332c-.709-1.029-2.29-1.373-3.868-1.373-3.619 0-6.71 2.741-7.312 6.586-.313 1.918.132 3.752 1.22 5.03.998 1.177 2.426 1.666 4.125 1.666 2.916 0 4.533-1.875 4.533-1.875l-.146.91a.57.57 0 0 0 .562.66h3.1a.95.95 0 0 0 .939-.804l1.97-11.859a.57.57 0 0 0-.564-.66h-.346zm-6.16 5.446c-.337 2.148-2.169 3.658-4.34 3.658-1.077 0-1.954-.42-2.456-1.175-.414-.622-.533-1.46-.35-2.584.336-2.147 2.17-3.658 4.34-3.658 1.077 0 1.954.42 2.456 1.175.414.621"/></svg>
+                        <p style="color: #555; font-size: 0.9rem;">You will be redirected to PayPal to complete your purchase.</p>
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-black" class="btn-checkout btn-black">Pay $145.00</button>
+                <button type="submit" id="btn-paypal" class="btn-checkout btn-paypal">Pay with PayPal</button>
+            </form>
+
+            <div>
+                <h2 class="checkout-section-title">Order Summary</h2>
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span>AURA Signature Perfume</span>
+                        <span>$120.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping Fee</span>
+                        <span>$10.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Estimated Tax</span>
+                        <span>$15.00</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span>$145.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('saved_user_name');
+            if (savedName) {
+                const greeting = document.getElementById('greeting-message');
+                greeting.innerText = `Welcome back, ${savedName}! Please complete your order below.`;
+                greeting.style.display = 'block';
+            }
+        });
+
+        function selectMethod(methodType) {
+            document.getElementById('radio-' + methodType).checked = true;
+            
+            document.getElementById('wrapper-card').classList.remove('active');
+            document.getElementById('wrapper-paypal').classList.remove('active');
+            
+            document.getElementById('wrapper-' + methodType).classList.add('active');
+
+            const isPayPal = (methodType === 'paypal');
+            document.getElementById('btn-black').style.display = isPayPal ? 'none' : 'block';
+            document.getElementById('btn-paypal').style.display = isPayPal ? 'block' : 'none';
+            
+            const cardInputs = document.querySelectorAll('#wrapper-card input[type="text"]');
+            cardInputs.forEach(input => input.required = !isPayPal);
+        }
+
+        function processPayment(event) {
+            event.preventDefault();
+            const method = document.querySelector('input[name="paymentType"]:checked').value;
+            
+            if (method === 'paypal') {
+                alert('Redirecting to secure PayPal gateway...\n\nPayment of $145.00 successful!');
+            } else {
+                alert('Processing credit card payment...\n\nPayment of $145.00 successful!');
+            }
+        }
+    </script>
+</body>
+</html>
