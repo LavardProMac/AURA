@@ -14,6 +14,13 @@
     
     <!-- CSS File -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Inline Style to add a hover effect for the dropdown button -->
+    <style>
+        #logoutBtn:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
 </head>
 <body>
 
@@ -40,6 +47,22 @@
             </nav>
 
             <div class="nav-actions">
+                <!-- User Profile Display & Dropdown -->
+                <div id="userNavDisplay" class="user-nav-display" style="position: relative; display: flex; align-items: center; gap: 8px;">
+                    <!-- Empty Account Icon -->
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-label="User Account">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                    <!-- Styled User Name (Gray & Dotted Underline) -->
+                    <span id="userNameSpan" class="user-name-span" style="color: gray; text-decoration: underline dotted; cursor: pointer;"></span>
+                    
+                    <!-- Dropdown Box (Hidden by default) -->
+                    <div id="userDropdown" style="display: none; position: absolute; top: 150%; right: 0; background: #fff; border: 1px solid #e5e5e5; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 4px; min-width: 140px; z-index: 3000;">
+                        <button id="logoutBtn" style="width: 100%; border: none; background: none; padding: 12px 16px; cursor: pointer; text-align: left; font-size: 0.85rem; color: #111; font-family: inherit; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s;">Sign Out</button>
+                    </div>
+                </div>
+
                 <button class="icon-btn search-btn" aria-label="Search">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 </button>
@@ -49,7 +72,6 @@
                 </button>
             </div>
         </div>
-        
     </header>
 
     <!-- Search Overlay -->
@@ -59,7 +81,7 @@
                 <input type="text" id="searchInput" placeholder="Search products, collections..." autocomplete="off">
                 <button class="close-search-btn" id="closeSearch" aria-label="Close Search">&times;</button>
             </div>
-        </div>z
+        </div>
     </div>
 
     <!-- 3. Cart Side Drawer -->
@@ -77,7 +99,7 @@
                 <span>Subtotal:</span>
                 <strong id="cartSubtotal">$0.00</strong>
             </div>
-            <button class="btn btn-dark btn-block" id="checkoutBtn"><a href="payment.html" class="checkout-btn" style="display: block; text-align: center; text-decoration: none;">Checkout Now</a></button>
+            <button class="btn btn-dark btn-block" id="checkoutBtn"><a href="payment.html" class="checkout-btn" style="display: block; text-align: center; text-decoration: none; color: inherit;">Checkout Now</a></button>
         </div>
     </aside>
 
@@ -141,17 +163,16 @@
                 <p class="page-indicator-text">Page <span id="currentPageNum">1</span> of 2</p>
             </div>
 
-            <!-- Slider Wrapper với Mũi Tên 2 bên -->
+            <!-- Slider Wrapper -->
             <div class="products-row-wrapper">
                 <button class="vertical-arrow-btn prev-btn" id="prevBatchBtn" aria-label="Previous 4 Products">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
                 </button>
 
-                <!-- Cấu trúc Slider Window & Track -->
                 <div class="products-slider-window">
                     <div class="products-slider-track" id="productsTrack">
                         
-                        <!-- TRANG 1 (4 MÓN) -->
+                        <!-- PAGE 1 (4 ITEMS) -->
                         <div class="products-page">
                             <div class="product-card" data-id="1" data-name="Wool Trench Coat" data-price="245" data-img="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=800&auto=format&fit=crop">
                                 <div class="product-image-wrapper">
@@ -232,7 +253,7 @@
                             </div>
                         </div>
 
-                        <!-- TRANG 2 (4 MÓN) -->
+                        <!-- PAGE 2 (4 ITEMS) -->
                         <div class="products-page">
                             <div class="product-card" data-id="5" data-name="Cashmere Oversized Knit" data-price="210" data-img="https://images.unsplash.com/photo-1576995853123-5a10305d93c0?q=80&w=800&auto=format&fit=crop">
                                 <div class="product-image-wrapper">
@@ -352,7 +373,7 @@
         </div>
     </section>
 
-    <!-- 8. Footer Section (scroll-block removed) -->
+    <!-- 8. Footer Section -->
     <footer class="footer" id="about">
         <div class="container footer-grid">
             <div class="footer-col">
@@ -396,5 +417,23 @@
 
     <!-- Script File -->
     <script src="script.js"></script>
+
+    <!-- Inline Script for Dropdown Logic -->
+    <script>
+        document.addEventListener('click', function(e) {
+            const nameSpan = document.getElementById('userNameSpan');
+            const dropdown = document.getElementById('userDropdown');
+            if (nameSpan && dropdown) {
+                // If user clicked their name, toggle the box
+                if (e.target === nameSpan) {
+                    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                } 
+                // Close the box if the user clicks anywhere else
+                else if (!dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
