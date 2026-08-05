@@ -3,66 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In & Sign Up — AURA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='16' fill='%23111111'/><text x='50%' y='68%' font-family='Georgia, serif' font-size='19' font-weight='bold' fill='%23ffffff' text-anchor='middle'>A</text></svg>">
+    <title>Login — AURA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        .auth-page {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            background-color: #fdfbf7;
-        }
-        .auth-container {
-            background: #ffffff;
-            width: 100%;
-            max-width: 450px;
-            padding: 40px;
-            border-radius: 4px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #e5e5e5;
-        }
-        .auth-tab {
-            flex: 1;
-            text-align: center;
-            padding-bottom: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            color: #777;
-            transition: all 0.3s ease;
-            position: relative;
-        }
+        .auth-page { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; background-color: #fdfbf7; }
+        .auth-container { background: #ffffff; width: 100%; max-width: 450px; padding: 40px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
+        .auth-tabs { display: flex; margin-bottom: 24px; border-bottom: 2px solid #e5e5e5; }
+        .auth-tab { flex: 1; text-align: center; padding-bottom: 12px; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; color: #777; position: relative; }
         .auth-tab.active { color: #111; }
-        .auth-tab.active::after {
-            content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: #111;
-        }
-        .auth-form { display: none; animation: fadeIn 0.4s ease; }
+        .auth-tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: #111; }
+        .auth-form { display: none; }
         .auth-form.active { display: block; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label {
-            display: block; font-size: 0.85rem; margin-bottom: 8px; color: #555; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .form-group input {
-            width: 100%; padding: 14px 16px; border: 1px solid #e5e5e5; font-family: inherit; font-size: 1rem; outline: none; transition: border-color 0.3s ease; box-sizing: border-box;
-        }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 0.8rem; margin-bottom: 6px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .form-group input { width: 100%; padding: 12px 14px; border: 1px solid #e5e5e5; font-family: inherit; font-size: 0.95rem; outline: none; box-sizing: border-box; }
         .form-group input:focus { border-color: #111; }
-        .forgot-password {
-            display: block; text-align: right; font-size: 0.85rem; color: #777; margin-top: -10px; margin-bottom: 20px; text-decoration: none;
-        }
-        .forgot-password:hover { color: #111; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .auth-msg { margin-bottom: 16px; padding: 10px 14px; font-size: 0.85rem; border-radius: 3px; display: none; }
+        .auth-msg.error { background: #fde8e8; color: #e53e3e; border: 1px solid #f8b4b4; }
+        .auth-msg.success { background: #def7ec; color: #03543f; border: 1px solid #84e1bc; }
     </style>
 </head>
 <body>
@@ -74,22 +34,23 @@
     <div class="auth-page">
         <div class="auth-container">
             <div class="auth-tabs">
-                <div class="auth-tab active" onclick="switchTab('loginForm')">Sign In</div>
-                <div class="auth-tab" onclick="switchTab('registerForm')">Create Account</div>
+                <div class="auth-tab" id="tab-login" onclick="switchTab('loginForm')">Sign In</div>
+                <div class="auth-tab" id="tab-register" onclick="switchTab('registerForm')">Create Account</div>
             </div>
 
+            <div id="authAlert" class="auth-msg"></div>
+
             <!-- Sign In Form -->
-            <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
+            <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" placeholder="Enter your email" required>
+                    <input type="email" id="login-email" placeholder="Enter your email" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" placeholder="Enter your password" required>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
                 </div>
-                <a href="#" class="forgot-password">Forgot password?</a>
-                <button type="submit" style="width: 100%; padding: 15px; background: #111; color: #fff; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Sign In</button>
+                <button type="submit" style="width: 100%; padding: 14px; background: #111; color: #fff; border: none; cursor: pointer; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Sign In</button>
             </form>
 
             <!-- Register Form -->
@@ -100,45 +61,90 @@
                 </div>
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" placeholder="Enter your email" required>
+                    <input type="email" id="reg-email" placeholder="Enter your email" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" placeholder="Create a password" required>
+                    <input type="password" id="reg-password" placeholder="Create a password" required>
                 </div>
-                <button type="submit" style="width: 100%; padding: 15px; background: #111; color: #fff; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Create Account</button>
+                <button type="submit" style="width: 100%; padding: 14px; background: #111; color: #fff; border: none; cursor: pointer; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Create Account</button>
             </form>
         </div>
     </div>
 
     <script>
+        const alertBox = document.getElementById('authAlert');
+
+        function showAlert(msg, isError = true) {
+            alertBox.textContent = msg;
+            alertBox.className = `auth-msg ${isError ? 'error' : 'success'}`;
+            alertBox.style.display = 'block';
+        }
+
         function switchTab(tabId) {
+            alertBox.style.display = 'none';
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
 
             if (tabId === 'loginForm') {
-                document.querySelectorAll('.auth-tab')[0].classList.add('active');
+                document.getElementById('tab-login').classList.add('active');
             } else {
-                document.querySelectorAll('.auth-tab')[1].classList.add('active');
+                document.getElementById('tab-register').classList.add('active');
             }
             document.getElementById(tabId).classList.add('active');
         }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode');
+
+            if (mode === 'register' || !localStorage.getItem('registered_users')) {
+                switchTab('registerForm');
+            } else {
+                switchTab('loginForm');
+            }
+        });
+
         function handleRegister(event) {
             event.preventDefault();
-            const userName = document.getElementById('reg-name').value;
-            localStorage.setItem('saved_user_name', userName);
-            
-            alert('Account created successfully! Please sign in.');
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const password = document.getElementById('reg-password').value;
+
+            let users = JSON.parse(localStorage.getItem('registered_users')) || [];
+
+            if (users.some(u => u.email === email)) {
+                showAlert('An account with this email already exists.', true);
+                return;
+            }
+
+            users.push({ name, email, password });
+            localStorage.setItem('registered_users', JSON.stringify(users));
+
+            showAlert('Account created successfully! Please sign in.', false);
             switchTab('loginForm');
+            document.getElementById('login-email').value = email;
+            document.getElementById('login-password').focus();
         }
 
         function handleLogin(event) {
             event.preventDefault();
-            if (!localStorage.getItem('saved_user_name')) {
-                localStorage.setItem('saved_user_name', 'Valued Customer');
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+
+            let users = JSON.parse(localStorage.getItem('registered_users')) || [];
+            const foundUser = users.find(u => u.email === email && u.password === password);
+
+            if (!foundUser) {
+                showAlert('Invalid email or password. Please try again.', true);
+                return;
             }
-            // Corrected: Redirects back to index.html after sign in
+
+            // Set login sessions locally
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('saved_user_name', foundUser.name);
+            localStorage.setItem('aura_user', JSON.stringify({ name: foundUser.name, email: foundUser.email }));
+
             window.location.href = 'index.html';
         }
     </script>
