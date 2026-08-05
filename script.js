@@ -1,7 +1,30 @@
+// Check if user is logged in. If not, redirect to registration mode on login page.
+if (!localStorage.getItem('isLoggedIn')) {
+    window.location.href = 'login.html?mode=register';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // Cart State
-    let cart = [];
+
+    // Setup navbar user profile display
+    const savedName = localStorage.getItem('saved_user_name');
+    const userNameSpan = document.getElementById('userNameSpan');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (savedName && userNameSpan) {
+        userNameSpan.textContent = savedName;
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('saved_user_name');
+            localStorage.removeItem('aura_user');
+            window.location.href = 'login.html?mode=register';
+        });
+    }
+
+    // Cart State initialized from localStorage
+    let cart = JSON.parse(localStorage.getItem('aura_cart')) || [];
 
     // ==========================================================================
     // 0. SCROLL-BASED ANIMATION (Intersection Observer)
@@ -37,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks.classList.toggle('active');
         });
 
-        // Tự động đóng menu khi chọn mục
         document.querySelectorAll('.nav-links .nav-item').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
@@ -188,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return '$' + amount.toFixed(2);
     }
 
-    // Hàm đồng bộ hiển thị số lượng trên Product Card ngoài trang
     function syncProductCardUI(id, quantity) {
         const card = document.querySelector(`.product-card[data-id="${id}"]`);
         if (!card) return;
@@ -207,8 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Cập nhật giao diện Giỏ hàng
     function updateCartUI() {
+        // Persist cart to localStorage
+        localStorage.setItem('aura_cart', JSON.stringify(cart));
+
         const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
@@ -240,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event Delegation: Xử lý bấm nút + / - trực tiếp trong giỏ hàng
+    // Event Delegation: Cart Drawer Actions
     if (cartItemsList) {
         cartItemsList.addEventListener('click', (e) => {
             const target = e.target;
@@ -268,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Xử lý nút bấm trên các thẻ sản phẩm (Product Cards) ngoài trang
+    // Product Card Buttons Event Handler
     const allProducts = document.querySelectorAll('.product-card');
     allProducts.forEach(card => {
         const id = card.getAttribute('data-id');
@@ -318,6 +341,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Sync UI with initial cart state loaded from localStorage
+    cart.forEach(item => {
+        syncProductCardUI(item.id, item.quantity);
+    });
+    updateCartUI();
+
     // Newsletter Form
     const newsletterForm = document.getElementById('newsletterForm');
     if (newsletterForm) {
@@ -338,7 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
     const searchModal = document.querySelector('.search-modal');
 
-    // 1. Dynamically create a results container so index.html stays completely untouched
     const searchResults = document.createElement('div');
     searchResults.style.marginTop = '24px';
     searchResults.style.maxHeight = '60vh';
@@ -353,8 +381,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!searchOverlay) return;
         searchOverlay.classList.add('active');
         if (searchInput) {
-            searchInput.value = ''; // Reset input on open
-            searchResults.innerHTML = ''; // Clear old results
+            searchInput.value = '';
+            searchResults.innerHTML = '';
             searchResults.style.display = 'none';
             setTimeout(() => searchInput.focus(), 100);
         }
@@ -390,11 +418,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. Real-time Prefix Search Logic
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase().trim();
-            searchResults.innerHTML = ''; // Clear results on every keystroke
+            searchResults.innerHTML = '';
 
             if (searchTerm === '') {
                 searchResults.style.display = 'none';
@@ -408,7 +435,6 @@ document.addEventListener('DOMContentLoaded', () => {
             allProducts.forEach(card => {
                 const productName = card.getAttribute('data-name').toLowerCase();
                 
-                // Show product ONLY if the name starts with the exact typed prefix
                 if (productName.startsWith(searchTerm)) {
                     hasResults = true;
                     
@@ -416,7 +442,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const name = card.getAttribute('data-name');
                     const price = parseFloat(card.getAttribute('data-price')).toFixed(2);
 
-                    // Create a minimalist result row that matches your site's aesthetic
                     const resultItem = document.createElement('div');
                     resultItem.style.display = 'flex';
                     resultItem.style.alignItems = 'center';
@@ -447,32 +472,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('section[id], footer[id]');
     const navItems = document.querySelectorAll('.nav-links .nav-item');
     
-    let isClickScrolling = false; // Cờ đánh dấu người dùng vừa click menu
+    let isClickScrolling = false;
     let scrollTimeout = null;
 
-    // Bắt sự kiện Click vào các mục Navbar
     navItems.forEach(item => {
         item.addEventListener('click', function () {
-            // 1. Tạm khóa ScrollSpy để không bị nhảy gạch chân khi đang cuộn mượt
             isClickScrolling = true;
 
-            // 2. Chuyển class 'active' thẳng đến mục vừa click ngay lập tức
             navItems.forEach(nav => nav.classList.remove('active'));
             this.classList.add('active');
 
-            // 3. Xóa bộ đếm thời gian cũ (nếu có)
             if (scrollTimeout) clearTimeout(scrollTimeout);
 
-            // 4. Bật lại ScrollSpy sau khi hoàn tất cuộn mượt (sau 800ms)
             scrollTimeout = setTimeout(() => {
                 isClickScrolling = false;
             }, 800);
         });
     });
 
-    // Hàm kiểm tra vị trí cuộn trang tự động
     function updateActiveNavOnScroll() {
-        // Nếu vừa click vào menu, bỏ qua việc kiểm tra vị trí cuộn
         if (isClickScrolling) return;
 
         let currentSectionId = '';
@@ -487,7 +505,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Trường hợp đã cuộn sát đáy trang -> Kích hoạt 'about'
         const isAtBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 50);
         if (isAtBottom) {
             currentSectionId = 'about';
@@ -501,6 +518,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Kích hoạt khi cuộn trang
     window.addEventListener('scroll', updateActiveNavOnScroll);
 });
